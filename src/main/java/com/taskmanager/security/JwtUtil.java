@@ -72,4 +72,9 @@ public class JwtUtil {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
+    // ✅ 用于日志打印的 getter
+    public String getSecret() {
+        return secret;
+    }
 }

@@ -19,6 +19,11 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "controller ok";
+    }
+
     @GetMapping
     public ResponseEntity<ApiResponse<List<Task>>> getAllTasks(
             @RequestParam(required = false) String status,
