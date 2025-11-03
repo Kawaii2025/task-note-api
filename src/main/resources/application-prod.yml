@@ -45,4 +45,4 @@ logging:
 
 app:
   cors:
-    allowed-origins: https://main.d1a4irys2kfska.amplifyapp.com,http://localhost:3000,http://localhost:5173
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS}
