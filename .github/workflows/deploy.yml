@@ -1,0 +1,40 @@
+name: Deploy to AWS Elastic Beanstalk
+
+on:
+  push:
+    branches: [ main ]  # 如果你的主分支是 master,改成 master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Generate deployment package
+        run: |
+          mkdir -p deploy
+          cp target/*.jar deploy/application.jar
+          cp Procfile deploy/
+          cd deploy && zip -r ../deploy.zip .
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: task-notes-api
+          environment_name: production-env
+          version_label: ${{ github.sha }}
+          region: us-east-1
+          deployment_package: deploy.zip
